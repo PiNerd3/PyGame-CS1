@@ -165,11 +165,11 @@ def pFromC(x, y = None):
     x, y = x if y is None else (x, y)
     return math.sqrt(x ** 2 + y ** 2), math.atan2(y, x)
 
-def cFromP(r, theta = None):
+def cFromP(r, theta = None, dest = (0, 0)):
     """Take a tuple (radius, theta) or arguments radius, theta and return an (x, y) pair.
     """
     r, theta = r if theta is None else (r, theta)
-    return r * math.cos(theta), r * math.sin(theta)
+    return r * math.cos(theta) + dest[0], r * math.sin(theta) + dest[1]
 
 r90 = math.radians(-90)
 
@@ -183,6 +183,9 @@ smallPent = genPolyTuple(5, 150)
 ## triangles! ##
 triL = genPolyTuple(3, 110)
 triR = genPolyTuple(3, 110)
+
+triDist = math.sqrt(((windowRect.centerx - windowRect.width/5) ** 2) * 2)
+triCents = genPolyTuple(4, triDist)
 
 triColsAvoid = (
     BLUE,
@@ -295,12 +298,14 @@ while True:
             triCols = (BLUE,)
             while any(_col in triCols for _col in triColsAvoid):
                 triCols = tuple(random.choice(COLORS) for _ in range(4))
-    pygame.draw.polygon(displaySurface, triCols[0], cPolyFromP(triL, dest = (windowRect.width/5  , windowRect.height/5  )))
-    pygame.draw.polygon(displaySurface, triCols[1], cPolyFromP(triR, dest = (windowRect.width/5*4, windowRect.height/5  )))
-    pygame.draw.polygon(displaySurface, triCols[2], cPolyFromP(triL, dest = (windowRect.width/5  , windowRect.height/5*4)))
-    pygame.draw.polygon(displaySurface, triCols[3], cPolyFromP(triR, dest = (windowRect.width/5*4, windowRect.height/5*4)))
+    pygame.draw.polygon(displaySurface, triCols[0], cPolyFromP(triL, dest = cFromP(triCents[0], dest = windowRect.center)))
+    pygame.draw.polygon(displaySurface, triCols[1], cPolyFromP(triR, dest = cFromP(triCents[1], dest = windowRect.center)))
+    pygame.draw.polygon(displaySurface, triCols[2], cPolyFromP(triL, dest = cFromP(triCents[2], dest = windowRect.center)))
+    pygame.draw.polygon(displaySurface, triCols[3], cPolyFromP(triR, dest = cFromP(triCents[3], dest = windowRect.center)))
+
 
     if (freezeAllowed and not frozen) or not freezeAllowed:
+        triCents = rotatePPolyBy(triCents, math.radians(0.1))
         triL = rotatePPolyBy(triL, 1.5*math.radians(-rot))
         triR = rotatePPolyBy(triR, 1.5*math.radians(+rot))
 
