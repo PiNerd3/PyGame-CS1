@@ -15,6 +15,8 @@ import time
 import math
 import random
 
+from collections import deque
+
 from pygame.locals import *
 
 import nathaniellib.main
@@ -194,10 +196,9 @@ triColsAvoid = (
     #GREEN,
     )
 
-if not changeTriCol:
-    triCols = (BLUE,)
-    while any(_col in triCols for _col in triColsAvoid):
-        triCols = tuple(random.choice(COLORS) for _ in range(4))
+triCols = (BLUE,)
+while any(_col in triColsAvoid for _col in triCols):
+    triCols = deque(random.choice(COLORS) for _ in range(4))
         
 def cPolyFromP(_tuple, dest = windowRect.center):
     #return tuple( tuple(map(lambda num: num + windowRect.width/2, coord)) for coord in _tuple )
@@ -295,9 +296,7 @@ while True:
     #tris
     if changeTriCol:
         if _frameCount % 1000 == 0:
-            triCols = (BLUE,)
-            while any(_col in triCols for _col in triColsAvoid):
-                triCols = tuple(random.choice(COLORS) for _ in range(4))
+            triCols.rotate(-1)
     pygame.draw.polygon(displaySurface, triCols[0], cPolyFromP(triL, dest = cFromP(triCents[0], dest = windowRect.center)))
     pygame.draw.polygon(displaySurface, triCols[1], cPolyFromP(triR, dest = cFromP(triCents[1], dest = windowRect.center)))
     pygame.draw.polygon(displaySurface, triCols[2], cPolyFromP(triL, dest = cFromP(triCents[2], dest = windowRect.center)))
@@ -306,7 +305,7 @@ while True:
 
     if (freezeAllowed and not frozen) or not freezeAllowed:
         triCents = rotatePPolyBy(triCents, math.radians(0.1))
-        triL = rotatePPolyBy(triL, 1.5*math.radians(-rot))
+        triL = rotatePPolyBy(triL, 1.5*math.radians(+rot))
         triR = rotatePPolyBy(triR, 1.5*math.radians(+rot))
 
     # The center text #
