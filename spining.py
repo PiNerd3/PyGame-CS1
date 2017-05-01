@@ -216,7 +216,7 @@ def rotatePPolyBy(poly_tuple, angle):
 ###   keycodes   ### - help w/ typing
 
                           #pygame.key.name(code) / what I call it
-disallowed_typing = {27,  #escape
+disallowed_typing = {27,  #escape  #not working????!?
                      9,   #tab
                      315, #help         / fn
                      311, #left super   / windows key
