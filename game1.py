@@ -20,7 +20,7 @@ from collections import deque
 from pygame.locals import *
 
 import nathaniellib.main
-from nathaniellib.npygame.colors import  *
+from nathaniellib.npygame.colors import *
 
 
 ###   init   ###
@@ -244,6 +244,8 @@ disallowed_typing = {27,  #escape
 dont_moves        = {301,   #caps lock / caps lock on
                      303,   #right shift
                      304,   #left shift
+                     305,   #left ctrl
+                     306,   #right ctrl
                      }
 
 ###   _strMessage - related constants for the first-run through   ###
@@ -387,8 +389,10 @@ while True:
         rot = rot_orig
 
     if keys[K_h] and ctrl_pressed:
-        pass
-        #this would be 'help': reset the _ever variables all to false so all "Try ..." messages show
+        img_clicked_ever = False
+        anythingTyped = False
+        ctrl_pressed_ever, left_arrow_pressed_ever, right_arrow_pressed_ever = False, False, False
+        #if the first key after ^H is ctrl and _str != '', then it displays string when you press ctrl
 
     if keys[K_r] and ctrl_pressed:
         pass
@@ -431,7 +435,7 @@ while True:
             
             #typing for _strMessage
             no_disalloweds = (event.key not in disallowed_typing)
-            if True:#no_disalloweds and not pygame.key.get_mods() & KMOD_CTRL: #ctrl_pressed: 
+            if no_disalloweds and not ctrl_pressed: #pygame.key.get_mods() & KMOD_CTRL: #
                 anythingTyped = True
                 if event.key == 8 and backspaceAllowed: #backspace
                     _str = _str[:-1]
@@ -444,4 +448,4 @@ while True:
 
                 if event.key not in dont_moves:
                     new_char = True
-                #debuggin!! --->>  #print("KEYCODE: {}: Meaning:  {}".format(event.key, pygame.key.name(event.key))) ---->>>   #print(pygame.key.get_mods() & KMOD_CTRL)
+                #debuggin!! --->>#  print("KEYCODE: {}: Meaning:  {}".format(event.key, pygame.key.name(event.key))) ###---->>>   #print(pygame.key.get_mods() & KMOD_CTRL)
