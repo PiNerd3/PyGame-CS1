@@ -20,7 +20,7 @@ from collections import deque
 from pygame.locals import *
 
 import nathaniellib.main
-from nathaniellib.npygame.colors import  *
+from nathaniellib.npygame.colors import *
 
 
 ###   init   ###
@@ -236,7 +236,7 @@ disallowed_typing = {27,  #escape  #not working????!?
                      13,  #return       / enter
                      #8,  #backspace
                      }.union(
-                         {val for val in range(282, 293 + 1)} #f1 through t12 / function keys
+                         {keyCode for keyCode in range(282, 293 + 1)} #f1 through t12 / function keys
                          ).union(
                              {8} if not backspaceAllowed else set()
                              ) #backspace
@@ -431,7 +431,7 @@ while True:
             
             #typing for _strMessage
             no_disalloweds = (event.key not in disallowed_typing)
-            if True:#no_disalloweds and not pygame.key.get_mods() & KMOD_CTRL: #ctrl_pressed: 
+            if no_disalloweds and not ctrl_pressed: #pygame.key.get_mods() & KMOD_CTRL:
                 anythingTyped = True
                 if event.key == 8 and backspaceAllowed: #backspace
                     _str = _str[:-1]
